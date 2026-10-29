@@ -14,6 +14,8 @@ Features
 - Prevent duplicate email addresses
 - Handle errors such as student not found and duplicate email
 - Automatically generate interactive API documentation
+- Search student records by name
+- Paginate student records using page and page_size parameters
 
 Technologies Used
 
@@ -44,6 +46,31 @@ GET| "/students"| Get all students
 GET| "/students/{student_id}"| Get a student by ID
 PATCH| "/students/{student_id}"| Update student details
 DELETE| "/students/{student_id}"| Delete a student
+
+Example API Request
+
+Create a Student
+
+Endpoint: "POST /students"
+
+Request Body:
+
+{
+  "name": "Rahul Das",
+  "date_of_birth": "2004-05-15",
+  "email": "rahul.das@example.com",
+  "phone": "9876543210"
+}
+
+Successful Response: "201 Created"
+
+{
+  "id": 1,
+  "name": "Rahul Das",
+  "date_of_birth": "2004-05-15",
+  "email": "rahul.das@example.com",
+  "phone": "9876543210"
+}
 
 Installation and Setup
 

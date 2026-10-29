@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 
 from database import Base, engine, SessionLocal
@@ -58,8 +58,25 @@ def create_student(
 
 
 @app.get("/students", response_model=list[StudentResponse])
-def get_students(db: Session = Depends(get_db)):
-    return db.query(Student).order_by(Student.id).all()
+def get_students(
+    search: str | None = Query(default=None, min_length=1),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=10, ge=1, le=100),
+    db: Session = Depends(get_db)
+):
+    query = db.query(Student)
+
+    if search:
+        query = query.filter(Student.name.ilike(f"%{search}%"))
+
+    offset = (page - 1) * page_size
+
+    return (
+        query.order_by(Student.id)
+        .offset(offset)
+        .limit(page_size)
+        .all()
+    )
 
 
 @app.get("/students/{student_id}", response_model=StudentResponse)
